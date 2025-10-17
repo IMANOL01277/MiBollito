@@ -17,7 +17,7 @@ if ($result->num_rows > 0) {
     // Comparar contraseñas
     if (password_verify($contraseña, $usuario['contraseña'])) {
         $_SESSION['nombre'] = $usuario['nombre'];
-        header("Location: index.html");
+        header("Location: index.php");
         exit();
     } else {
         header("Location: login.php?error=Contraseña incorrecta");
@@ -28,4 +28,5 @@ if ($result->num_rows > 0) {
     exit();
 }
 ?>
+
 
