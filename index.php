@@ -101,6 +101,10 @@ if (!isset($_SESSION['nombre'])) {
         <img src="img/icon_estadistica.png" alt="Estadísticas">
         <p>Estadística</p>
       </a>
+      <a href="estados.php" class="icon-card">
+        <img src="img/icon_estadistica.png" alt="Estados">
+        <p>Estados</p>
+      </a>
     </div>
 
     <p class="mt-3 fw-bold text-secondary">Mi Bollito</p>
