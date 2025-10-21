@@ -34,7 +34,7 @@
     <div class="alert alert-danger text-center"><?= htmlspecialchars($_GET['error']) ?></div>
   <?php endif; ?>
 
-  <form action="guardar_registro.php" method="POST">
+  <form action="guardar_registro.php" method="POST" novalidate>
     <div class="mb-3">
       <label for="nombre" class="form-label">Nombre completo</label>
       <input type="text" class="form-control" id="nombre" name="nombre" required>
@@ -45,7 +45,8 @@
     </div>
     <div class="mb-3">
       <label for="contraseña" class="form-label">Contraseña</label>
-      <input type="password" class="form-control" id="contraseña" name="contraseña" required>
+      <input type="password" class="form-control" id="contraseña" name="contraseña" minlength="8" required placeholder="Mínimo 8 caracteres">
+      <div class="form-text text-danger">La contraseña debe tener al menos 8 caracteres.</div>
     </div>
     <button type="submit" class="btn btn-success w-100">Registrarse</button>
   </form>
@@ -58,3 +59,4 @@
 
 </body>
 </html>
+
