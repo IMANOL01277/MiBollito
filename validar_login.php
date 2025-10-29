@@ -1,30 +1,30 @@
 <?php
-session_start();
 include("conexion.php");
+session_start();
 
 $correo = $_POST['correo'];
 $contraseña = $_POST['contraseña'];
 
-$sql = "SELECT * FROM usuarios WHERE correo = ?";
-$stmt = $conn->prepare($sql);
+$stmt = $conn->prepare("SELECT * FROM usuarios WHERE correo = ?");
 $stmt->bind_param("s", $correo);
 $stmt->execute();
-$result = $stmt->get_result();
+$resultado = $stmt->get_result();
 
-if ($result->num_rows > 0) {
-    $usuario = $result->fetch_assoc();
+if ($resultado->num_rows > 0) {
+    $usuario = $resultado->fetch_assoc();
 
-    // Comparar contraseñas
     if (password_verify($contraseña, $usuario['contraseña'])) {
         $_SESSION['nombre'] = $usuario['nombre'];
-        header("Location: index.php");
-        exit();
+        $_SESSION['correo'] = $usuario['correo'];
+        $_SESSION['rol'] = $usuario['rol']; // Guardar el rol
+        header("Location: panel.php");
     } else {
         header("Location: login.php?error=Contraseña incorrecta");
-        exit();
     }
 } else {
-    header("Location: login.php?error=Correo no registrado");
-    exit();
+    header("Location: login.php?error=Usuario no encontrado");
 }
+
+$stmt->close();
+$conn->close();
 ?>
