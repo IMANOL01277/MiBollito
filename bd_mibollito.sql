@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-10-2025 a las 23:20:02
+-- Tiempo de generación: 04-11-2025 a las 20:49:18
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -33,6 +33,13 @@ CREATE TABLE `categorias` (
   `descripcion` text DEFAULT NULL,
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `categorias`
+--
+
+INSERT INTO `categorias` (`id_categoria`, `nombre`, `descripcion`, `fecha_registro`) VALUES
+(1, 'Materia Prima', 'Materiales', '2025-10-22 21:38:56');
 
 -- --------------------------------------------------------
 
@@ -108,6 +115,32 @@ CREATE TABLE `domicilios` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `entregas_vendedores`
+--
+
+CREATE TABLE `entregas_vendedores` (
+  `id_entrega` int(11) NOT NULL,
+  `vendedor` varchar(100) NOT NULL,
+  `id_vendedor` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `cantidad` int(11) NOT NULL,
+  `fecha_entrega` datetime DEFAULT current_timestamp(),
+  `observacion` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `entregas_vendedores`
+--
+
+INSERT INTO `entregas_vendedores` (`id_entrega`, `vendedor`, `id_vendedor`, `id_producto`, `cantidad`, `fecha_entrega`, `observacion`) VALUES
+(4, '', 1, 27, 15, '2025-10-29 22:04:38', NULL),
+(5, '', 1, 11, 8, '2025-10-29 22:10:53', NULL),
+(6, '', 1, 27, 5, '2025-10-29 22:11:16', NULL),
+(7, '', 2, 11, 2, '2025-10-29 22:11:22', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `estado`
 --
 
@@ -118,6 +151,13 @@ CREATE TABLE `estado` (
   `estado_producto` enum('En proceso','Finalizado','Detenido','En stock','Por vencer','Vencido','Pendiente','Entregado','Cancelado') NOT NULL,
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `estado`
+--
+
+INSERT INTO `estado` (`id_estado`, `id_producto`, `nombre`, `estado_producto`, `fecha_registro`) VALUES
+(1, 6, 'CASI MALO', '', '2025-10-23 21:27:37');
 
 -- --------------------------------------------------------
 
@@ -141,14 +181,12 @@ CREATE TABLE `movimientos_inventario` (
 --
 
 INSERT INTO `movimientos_inventario` (`id_movimiento`, `id_producto`, `tipo`, `cantidad`, `precio_unitario`, `fecha_movimiento`, `descripcion`) VALUES
-(9, 11, 'entrada', 10, 2000.00, '2025-10-17 19:22:32', 'Ajuste manual de stock desde Inventario'),
-(10, 11, 'salida', 10, 2000.00, '2025-10-17 19:22:48', 'Ajuste manual de stock desde Inventario'),
-(11, 8, 'entrada', 10, 2000.00, '2025-10-17 19:23:17', 'Ajuste manual de stock desde Inventario'),
-(12, 8, 'salida', 30, 2000.00, '2025-10-17 19:23:34', 'Ajuste manual de stock desde Inventario'),
-(13, 7, 'salida', 20, 2000.00, '2025-10-17 19:23:38', 'Ajuste manual de stock desde Inventario'),
-(14, 6, 'salida', 10, 2000.00, '2025-10-17 19:23:40', 'Ajuste manual de stock desde Inventario'),
-(15, 9, 'salida', 20, 1500.00, '2025-10-17 19:23:43', 'Ajuste manual de stock desde Inventario'),
-(16, 12, 'produccion', 0, 2000.00, '2025-10-17 20:55:26', 'Producción inicial');
+(23, 28, 'entrada', 20, 2000.00, '2025-10-29 20:22:24', 'Registro inicial de stock'),
+(24, 28, 'salida', 20, 2000.00, '2025-10-29 20:22:35', 'Actualización de stock'),
+(25, 27, 'salida', 15, 2000.00, '2025-10-30 03:04:38', 'Entrega a vendedor'),
+(26, 11, 'salida', 8, 2000.00, '2025-10-30 03:10:53', 'Entrega a vendedor'),
+(27, 27, 'salida', 5, 2000.00, '2025-10-30 03:11:16', 'Entrega a vendedor'),
+(28, 11, 'salida', 2, 2000.00, '2025-10-30 03:11:22', 'Entrega a vendedor');
 
 -- --------------------------------------------------------
 
@@ -194,12 +232,13 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id_producto`, `nombre`, `id_categoria`, `descripcion`, `precio`, `stock`, `id_proveedor`, `fecha_registro`) VALUES
-(6, 'Bollo', NULL, 'Bollo Limpio', 2000.00, 0, NULL, '2025-10-08 21:56:06'),
-(7, 'Bollo de Maiz', NULL, 'Bollo de Maiz', 2000.00, 0, NULL, '2025-10-09 19:52:15'),
-(8, 'Bollo Limpio', NULL, 'Bollo Limpio', 2000.00, 0, NULL, '2025-10-09 20:06:57'),
-(9, 'Masa', NULL, 'Masa', 1500.00, 0, NULL, '2025-10-09 20:07:33'),
-(11, 'Agua de maiz', NULL, 'agua', 2000.00, 0, NULL, '2025-10-09 20:12:15'),
-(12, 'Bollo de Mazorca', NULL, '', 2000.00, 0, NULL, '2025-10-17 20:55:26');
+(6, 'Bollo', 1, 'Bollo Limpio', 2000.00, 0, 1, '2025-10-08 21:56:06'),
+(7, 'Bollo de Maiz', 1, 'Bollo de Maiz', 2000.00, 0, 1, '2025-10-09 19:52:15'),
+(8, 'Bollo Limpio', 1, 'Bollo Limpio', 2000.00, 0, 1, '2025-10-09 20:06:57'),
+(9, 'Masa', 1, 'Masa', 1500.00, 0, 1, '2025-10-09 20:07:33'),
+(11, 'Agua de maiz', 1, 'agua', 2000.00, 0, 1, '2025-10-09 20:12:15'),
+(27, 'Bollito', 1, 'a', 2000.00, 0, NULL, '2025-10-29 20:19:28'),
+(28, 'Mai', 1, 'mai', 2000.00, 0, NULL, '2025-10-29 20:22:24');
 
 -- --------------------------------------------------------
 
@@ -273,6 +312,7 @@ CREATE TABLE `usuarios` (
   `correo` varchar(100) NOT NULL,
   `usuario` varchar(50) NOT NULL,
   `contraseña` varchar(255) NOT NULL,
+  `rol` enum('administrador','empleado') DEFAULT 'empleado',
   `id_rol` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -280,13 +320,43 @@ CREATE TABLE `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id_usuario`, `nombre`, `correo`, `usuario`, `contraseña`, `id_rol`) VALUES
-(9, 'imanol', 'imanol@lol.com', '', '$2y$10$TDYrHhShIj5/47OK.guIEeG3W4GvEu2tV/AU9v3mNJhQWTGBknAny', NULL),
-(12, 'nafer', 'nafer@esputa.com', '', '$2y$10$Ctmafc/ziSlU.s/ZOyAMeurXFK4DxuTbJw2ETqq8f/fY40vejaEnm', NULL),
-(13, 'imanol', 'imanol@sena.com', '', '$2y$10$flQNWx201ONm3F9XHjpAAuAszfGnEECFLx9uulpFuIAwcF53pDFN2', 1),
-(15, 'esneider', 'saenz@gmail.com', '', '$2y$10$mBn5gziowUMZRW7pmog0U.lC3pQRAEgsidywcbvgWHVWYBj.3WSdW', NULL),
-(16, 'imanolandres', 'imanol@senas.com', '', '$2y$10$sDXAZ1HmwMkYnE5IFKETXup8fGKgtZNiTd6cPBTz6sQtU4k88y0Ma', NULL),
-(17, 'imanolandres', 'ada@gmail.com', '', '$2y$10$QO58egQxer0neAa4xkxljeCEYgAfcqd80QmsCd2Nhd89iNdJ/abcW', NULL);
+INSERT INTO `usuarios` (`id_usuario`, `nombre`, `correo`, `usuario`, `contraseña`, `rol`, `id_rol`) VALUES
+(9, 'imanol', 'imanol@lol.com', '', '$2y$10$TDYrHhShIj5/47OK.guIEeG3W4GvEu2tV/AU9v3mNJhQWTGBknAny', 'empleado', NULL),
+(12, 'nafer', 'nafer@esputa.com', '', '$2y$10$Ctmafc/ziSlU.s/ZOyAMeurXFK4DxuTbJw2ETqq8f/fY40vejaEnm', 'empleado', NULL),
+(13, 'imanol', 'imanol@sena.com', '', '$2y$10$flQNWx201ONm3F9XHjpAAuAszfGnEECFLx9uulpFuIAwcF53pDFN2', 'administrador', 1),
+(15, 'esneider', 'saenz@gmail.com', '', '$2y$10$mBn5gziowUMZRW7pmog0U.lC3pQRAEgsidywcbvgWHVWYBj.3WSdW', 'empleado', NULL),
+(16, 'imanolandres', 'imanol@senas.com', '', '$2y$10$sDXAZ1HmwMkYnE5IFKETXup8fGKgtZNiTd6cPBTz6sQtU4k88y0Ma', 'empleado', NULL),
+(17, 'imanolandres', 'ada@gmail.com', '', '$2y$10$QO58egQxer0neAa4xkxljeCEYgAfcqd80QmsCd2Nhd89iNdJ/abcW', 'empleado', NULL),
+(18, 'Kanner', 'kannertapia0919@gmail.com', '', '$2y$10$PrCU6E6MvWGAaGkU5an77uAVJjjuYY9CQ0ohKW13f7zQlNXah8FRy', 'empleado', NULL),
+(19, 'yaimeth  martinez', 'yaimethmartinez1@gmail.com', '', '$2y$10$ypbeFcA/YRuxmhxY4IyN1OzPPLpG9dxKpXZ0/x.S83hu4ldHaPR96', 'empleado', NULL),
+(20, 'kjfiugiun/*/*/-+', 'nombre@gmail..com', '', '$2y$10$mb3XyTQSiae3PWIYL4EZLe8NzmJTSdRorWG0DJm5R57MP6EttqlSG', 'empleado', NULL),
+(21, 'haniel fernando ramirez romero', 'hanielr98@gmail.com', '', '$2y$10$N.Q2WUqEoRIuuC6Ih.c2HO7jWS6BjQ5ThPi8erX2AWkQZzkmkxOM6', 'empleado', NULL),
+(22, 'tiberio', 'vizcainotiberio@gmail.com', '', '$2y$10$2a4QBRiJQINwFUrh12anuuTJTv4NG/wqnylSNIPwbuar3WWlypSFi', 'empleado', NULL),
+(23, 'catalina moscote', 'catalinamoscote@gmail.com', '', '$2y$10$iadwQaJxJnsQcgIogYMxF.7GYHxjN5wr1fCtKemJQFv5uDQwXcQ9i', 'empleado', NULL),
+(24, 'andres', 'imanoal@sena.com', '', '$2y$10$oWE5LVCy2jbXSBhMKDrzy.DE0NsmJLfhTBBrwXD87gppaAJp784Qu', 'empleado', NULL),
+(25, 'franklin pianeta', 'pfranklinsantiago@gmail.com', '', '$2y$10$8Cy/5O7oZeBnBzo3nSdBNuScms5mAPklQtcbxL4zz32qZN3kFni9i', 'empleado', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `vendedores_ambulantes`
+--
+
+CREATE TABLE `vendedores_ambulantes` (
+  `id_vendedor` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `telefono` varchar(20) DEFAULT NULL,
+  `direccion` varchar(150) DEFAULT NULL,
+  `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `vendedores_ambulantes`
+--
+
+INSERT INTO `vendedores_ambulantes` (`id_vendedor`, `nombre`, `telefono`, `direccion`, `fecha_registro`) VALUES
+(1, 'Fadul', '3008247471', 'Cra 21 Calle 7E20', '2025-10-29 20:57:59'),
+(2, 'Fadul', '3008247471', 'Cra 21 Calle 7E20', '2025-10-29 20:58:03');
 
 -- --------------------------------------------------------
 
@@ -351,6 +421,14 @@ ALTER TABLE `domicilios`
   ADD PRIMARY KEY (`id_domicilio`);
 
 --
+-- Indices de la tabla `entregas_vendedores`
+--
+ALTER TABLE `entregas_vendedores`
+  ADD PRIMARY KEY (`id_entrega`),
+  ADD KEY `id_vendedor` (`id_vendedor`),
+  ADD KEY `id_producto` (`id_producto`);
+
+--
 -- Indices de la tabla `estado`
 --
 ALTER TABLE `estado`
@@ -408,6 +486,12 @@ ALTER TABLE `usuarios`
   ADD KEY `correo` (`correo`) USING BTREE;
 
 --
+-- Indices de la tabla `vendedores_ambulantes`
+--
+ALTER TABLE `vendedores_ambulantes`
+  ADD PRIMARY KEY (`id_vendedor`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -415,7 +499,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `control_stock`
@@ -442,16 +526,22 @@ ALTER TABLE `domicilios`
   MODIFY `id_domicilio` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `entregas_vendedores`
+--
+ALTER TABLE `entregas_vendedores`
+  MODIFY `id_entrega` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT de la tabla `estado`
 --
 ALTER TABLE `estado`
-  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `movimientos_inventario`
 --
 ALTER TABLE `movimientos_inventario`
-  MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
@@ -463,7 +553,7 @@ ALTER TABLE `pedidos`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `promociones`
@@ -487,7 +577,13 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT de la tabla `vendedores_ambulantes`
+--
+ALTER TABLE `vendedores_ambulantes`
+  MODIFY `id_vendedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Restricciones para tablas volcadas
@@ -511,6 +607,13 @@ ALTER TABLE `detalle_pedido`
 --
 ALTER TABLE `devoluciones`
   ADD CONSTRAINT `devoluciones_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `entregas_vendedores`
+--
+ALTER TABLE `entregas_vendedores`
+  ADD CONSTRAINT `entregas_vendedores_ibfk_1` FOREIGN KEY (`id_vendedor`) REFERENCES `vendedores_ambulantes` (`id_vendedor`),
+  ADD CONSTRAINT `entregas_vendedores_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`);
 
 --
 -- Filtros para la tabla `estado`
