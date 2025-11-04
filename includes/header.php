@@ -54,6 +54,18 @@ if (!isset($_SESSION['nombre'])) {
       margin-left: 260px;
       padding: 20px;
       flex: 1;
+
+    .badge {
+      color: #fff !important;
+      font-size: 0.9rem;
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+    .bg-success { background-color: #28a745 !important; }
+    .bg-warning { background-color: #ffc107 !important; color: #000 !important; }
+    .bg-danger { background-color: #dc3545 !important; }
+    .bg-secondary { background-color: #6c757d !important; }
+    .bg-light { background-color: #e9ecef !important; color: #000 !important; }
     }
   </style>
 </head>
