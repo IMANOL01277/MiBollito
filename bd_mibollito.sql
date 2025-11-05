@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-11-2025 a las 20:49:18
+-- Tiempo de generación: 05-11-2025 a las 19:55:22
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -148,7 +148,7 @@ CREATE TABLE `estado` (
   `id_estado` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `estado_producto` enum('En proceso','Finalizado','Detenido','En stock','Por vencer','Vencido','Pendiente','Entregado','Cancelado') NOT NULL,
+  `estado_producto` enum('En proceso','Finalizado','Detenido','En espera','Por vencer','Vencido','Pendiente','Entregado','Cancelado') NOT NULL,
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -157,7 +157,9 @@ CREATE TABLE `estado` (
 --
 
 INSERT INTO `estado` (`id_estado`, `id_producto`, `nombre`, `estado_producto`, `fecha_registro`) VALUES
-(1, 6, 'CASI MALO', '', '2025-10-23 21:27:37');
+(17, 6, '', 'Finalizado', '2025-11-04 20:16:20'),
+(18, 7, '', '', '2025-11-04 20:47:02'),
+(19, 7, '', 'En espera', '2025-11-04 20:48:32');
 
 -- --------------------------------------------------------
 
@@ -237,8 +239,8 @@ INSERT INTO `productos` (`id_producto`, `nombre`, `id_categoria`, `descripcion`,
 (8, 'Bollo Limpio', 1, 'Bollo Limpio', 2000.00, 0, 1, '2025-10-09 20:06:57'),
 (9, 'Masa', 1, 'Masa', 1500.00, 0, 1, '2025-10-09 20:07:33'),
 (11, 'Agua de maiz', 1, 'agua', 2000.00, 0, 1, '2025-10-09 20:12:15'),
-(27, 'Bollito', 1, 'a', 2000.00, 0, NULL, '2025-10-29 20:19:28'),
-(28, 'Mai', 1, 'mai', 2000.00, 0, NULL, '2025-10-29 20:22:24');
+(27, 'Bollito', 1, 'a', 2000.00, 0, 1, '2025-10-29 20:19:28'),
+(28, 'Mai', 1, 'mai', 2000.00, 0, 1, '2025-10-29 20:22:24');
 
 -- --------------------------------------------------------
 
@@ -535,7 +537,7 @@ ALTER TABLE `entregas_vendedores`
 -- AUTO_INCREMENT de la tabla `estado`
 --
 ALTER TABLE `estado`
-  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `movimientos_inventario`
