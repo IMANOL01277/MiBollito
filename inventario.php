@@ -16,7 +16,15 @@
   <div class="table-responsive">
     <table class="table table-hover" id="productosTable">
       <thead class="table-light">
-        <tr><th>#</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Categoría</th>
+          <th>Proveedor</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th>Acciones</th>
+        </tr>
       </thead>
       <tbody id="productosBody"></tbody>
     </table>
@@ -43,6 +51,12 @@
         <div class="mb-3">
           <label class="form-label">Categoría</label>
           <select name="id_categoria" id="selectCategoria" class="form-select" required></select>
+        </div>
+        <div class="mb-3" id="boxProveedor">
+          <label class="form-label">Proveedor</label>
+          <select name="id_proveedor" id="selectProveedor" class="form-select">
+            <option value="">Seleccione...</option>
+          </select>
         </div>
         <div class="row g-2">
           <div class="col">
@@ -85,6 +99,12 @@
           <label class="form-label">Categoría</label>
           <select name="id_categoria" id="edit_categoria" class="form-select" required></select>
         </div>
+        <div class="mb-3" id="edit_boxProveedor">
+          <label class="form-label">Proveedor</label>
+          <select name="id_proveedor" id="edit_proveedor" class="form-select">
+            <option value="">Seleccione...</option>
+          </select>
+        </div>
         <div class="row g-2">
           <div class="col">
             <label class="form-label">Precio</label>
@@ -107,6 +127,14 @@
 <script>
 const alertsContainer = document.getElementById('alerts');
 
+// Mostrar alertas
+function showAlert(container, type, msg) {
+  container.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+    ${msg}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>`;
+}
+
 // Cargar productos
 async function loadProductos() {
   const res = await fetch('ajax/productos.php?action=list');
@@ -120,6 +148,7 @@ async function loadProductos() {
       <td>${i + 1}</td>
       <td>${p.nombre}</td>
       <td>${p.categoria ?? '-'}</td>
+      <td>${p.proveedor ?? '-'}</td>
       <td>$${Number(p.precio).toFixed(2)}</td>
       <td>${p.stock}</td>
       <td>
@@ -132,18 +161,35 @@ async function loadProductos() {
   document.querySelectorAll('.btn-delete').forEach(b => b.onclick = onDeleteClick);
 }
 
-// Cargar categorías
-async function loadCategorias() {
-  const res = await fetch('ajax/productos.php?action=categories');
-  const data = await res.json();
-  const selects = [document.getElementById('selectCategoria'), document.getElementById('edit_categoria')];
-  selects.forEach(s => s.innerHTML = '');
-  if (data.success) {
-    data.categorias.forEach(c => {
-      selects.forEach(s => {
+// Cargar categorías y proveedores
+async function loadSelects() {
+  // Categorías
+  const resCat = await fetch('ajax/productos.php?action=categories');
+  const dataCat = await resCat.json();
+  const selectsCat = [document.getElementById('selectCategoria'), document.getElementById('edit_categoria')];
+  selectsCat.forEach(s => s.innerHTML = '');
+  if (dataCat.success) {
+    dataCat.categorias.forEach(c => {
+      selectsCat.forEach(s => {
         const opt = document.createElement('option');
         opt.value = c.id_categoria;
         opt.textContent = c.nombre;
+        s.appendChild(opt);
+      });
+    });
+  }
+
+  // Proveedores
+  const resProv = await fetch('ajax/productos.php?action=proveedores');
+  const dataProv = await resProv.json();
+  const selectsProv = [document.getElementById('selectProveedor'), document.getElementById('edit_proveedor')];
+  selectsProv.forEach(s => s.innerHTML = '<option value="">Seleccione...</option>');
+  if (dataProv.success) {
+    dataProv.proveedores.forEach(p => {
+      selectsProv.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = p.id_proveedor;
+        opt.textContent = p.nombre;
         s.appendChild(opt);
       });
     });
@@ -171,12 +217,15 @@ async function onEditClick() {
   const res = await fetch('ajax/productos.php?action=get&id=' + id);
   const r = await res.json();
   if (!r.success) return showAlert(alertsContainer, 'danger', r.message);
+
   document.getElementById('edit_id').value = r.product.id_producto;
   document.getElementById('edit_nombre').value = r.product.nombre;
   document.getElementById('edit_descripcion').value = r.product.descripcion;
   document.getElementById('edit_precio').value = r.product.precio;
   document.getElementById('edit_stock').value = r.product.stock;
   document.getElementById('edit_categoria').value = r.product.id_categoria;
+  document.getElementById('edit_proveedor').value = r.product.id_proveedor;
+
   new bootstrap.Modal(document.getElementById('modalEditProduct')).show();
 }
 
@@ -208,8 +257,9 @@ async function onDeleteClick() {
   } else showAlert(alertsContainer, 'danger', json.message);
 }
 
+// Cargar todo al inicio
 window.addEventListener('load', () => {
-  loadCategorias();
+  loadSelects();
   loadProductos();
 });
 </script>

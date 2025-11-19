@@ -78,11 +78,13 @@ if (!isset($_SESSION['nombre'])) {
   <a href="inventario.php"><i class="bi bi-box-seam"></i> Inventario</a>
   <a href="estadisticas.php"><i class="bi bi-graph-up"></i> Estadísticas</a>
   <a href="domicilios.php"><i class="bi bi-bicycle"></i> Domicilios</a>
-  <a href="estados.php"><i class="bi bi-tags"></i> Estados</a>
 
   <?php if ($_SESSION['rol'] === 'administrador'): ?>
+    <a href="usuarios.php"><i class="bi bi-person"></i> Usuarios</a>
+    <a href="categorias.php"><i class="bi bi-bookmark"></i> Categorias</a>
+    <a href="proveedores.php"><i class="bi bi-people"></i> Proveedores</a>
     <a href="vendedores.php"><i class="bi bi-truck"></i> Vendedores</a>
-    <a href="usuarios.php"><i class="bi bi-people"></i> Usuarios</a>
+
   <?php endif; ?>
 
   <div class="mt-auto">

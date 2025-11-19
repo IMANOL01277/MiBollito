@@ -7,7 +7,9 @@
   <h5 class="mt-4">📋 Movimientos recientes</h5>
   <div class="table-responsive">
     <table class="table table-bordered" id="tablaMovs">
-      <thead><tr><th>#</th><th>Producto</th><th>Tipo</th><th>Cantidad</th><th>Total</th><th>Fecha</th></tr></thead>
+      <thead>
+        <tr><th>#</th><th>Producto</th><th>Tipo</th><th>Cantidad</th><th>Total</th><th>Fecha</th></tr>
+      </thead>
       <tbody></tbody>
     </table>
   </div>
@@ -16,15 +18,61 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 async function loadEstadisticas(){
-  const r=await fetch('ajax/movimientos.php?action=resumen');const j=await r.json();
-  const cont=document.getElementById('resumenCards');cont.innerHTML='';
-  const colors={entrada:'success',salida:'danger',ganancia:'primary'};
-  for(const[k,v]of Object.entries(j.resumen))cont.innerHTML+=`<div class='col-md-4'><div class='resumen-card'><h6 class='text-muted'>${k}</h6><h3 class='text-${colors[k]||'dark'}'>$${Number(v).toLocaleString()}</h3></div></div>`;
-  new Chart(document.getElementById('grafico'),{type:'bar',data:{labels:Object.keys(j.resumen),datasets:[{label:'Valores ($)',data:Object.values(j.resumen),backgroundColor:['#28a745','#dc3545','#007bff']}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-  const r2=await fetch('ajax/movimientos.php?action=list');const m=await r2.json();
-  const tb=document.querySelector('#tablaMovs tbody');tb.innerHTML='';
-  m.movs.forEach((x,i)=>tb.innerHTML+=`<tr><td>${i+1}</td><td>${x.producto}</td><td><span class='badge bg-${x.tipo==='entrada'?'success':'danger'}'>${x.tipo}</span></td><td>${x.cantidad}</td><td>$${x.total}</td><td>${x.fecha_movimiento}</td></tr>`);
+  try {
+    const res = await fetch('ajax/movimientos.php?action=resumen');
+    const j = await res.json();
+    
+    // Cards resumen
+    const cont = document.getElementById('resumenCards');
+    cont.innerHTML = '';
+    const colors = {entrada:'success', salida:'danger', ganancia:'primary'};
+    for(const [k,v] of Object.entries(j.resumen)){
+      cont.innerHTML += `<div class='col-md-4'>
+        <div class='resumen-card'>
+          <h6 class='text-muted'>${k}</h6>
+          <h3 class='text-${colors[k] || "dark"}'>$${Number(v).toLocaleString()}</h3>
+        </div>
+      </div>`;
+    }
+
+    // Gráfico
+    const ctx = document.getElementById('grafico');
+    if(window.graficoChart) window.graficoChart.destroy();
+    window.graficoChart = new Chart(ctx,{
+      type:'bar',
+      data:{
+        labels:Object.keys(j.resumen),
+        datasets:[{
+          label:'Valores ($)',
+          data:Object.values(j.resumen),
+          backgroundColor:['#28a745','#dc3545','#007bff']
+        }]
+      },
+      options:{plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
+    });
+
+    // Movimientos recientes
+    const r2 = await fetch('ajax/movimientos.php?action=list');
+    const m = await r2.json();
+    const tb = document.querySelector('#tablaMovs tbody');
+    tb.innerHTML = '';
+    m.movs.forEach((x,i) => {
+      tb.innerHTML += `<tr>
+        <td>${i+1}</td>
+        <td>${x.producto}</td>
+        <td><span class='badge bg-${x.tipo==='entrada'?'success':'danger'}'>${x.tipo}</span></td>
+        <td>${x.cantidad}</td>
+        <td>$${Number(x.total).toLocaleString()}</td>
+        <td>${x.fecha_movimiento}</td>
+      </tr>`;
+    });
+  } catch(err){
+    console.error(err);
+  }
 }
-loadEstadisticas();
+
+// Cargar al inicio y refrescar cada vez que se actualice inventario
+window.addEventListener('load', loadEstadisticas);
 </script>
+
 <?php include("includes/footer.php"); ?>
